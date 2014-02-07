@@ -62,6 +62,7 @@ my $sep = ' '; 				# List separator. Currently used to split option lists
 my $updatesCount = 0;		# To make sure apt-get update/upgrade is only run once. May be set in $defaultPkgs as well as a through --install.
 my $db = "";				# Opening debug variable, used in system calls. Set to "echo '" when $simulate is on.
 my $dbe = "";				# Closing debug variable. Set to "'" when in $simulate.
+my $defaultDir;
 
 # Default packages to install: space separated list. Order respected, except updates, which is ALWAYS DONE FIRST. What if there's a package called updates?
 my $defaultPkgs = "sudo etckeeper links vim vrms updates";
@@ -101,12 +102,15 @@ my @backports = ("trac");
 # Command to use in `apt-get install` to install from backports: see previous comment.
 my $backportsCmd = "-t wheezy-backports";
 
-# Locations of dotfiles to be downloaded with --dots|o. Currently there's no way to make exclusions, or download directories? e.g. ~/.conf/...
+# Base url path to dotfiles (to save writing it out several times)
+my $dotRepoPath = "https://raw.github.com/thmshly/server-config/master/dotfiles/";
+
+# Url locations of dotfiles to be downloaded with --dots|o. Currently there's no way to make exclusions, or download directories? e.g. ~/.conf/...
 my %dotfiles = (
-	".bashrc" 		=> "https://raw.github.com/thmshly/dotfiles/master/srv/.bashrc",
-	".screenrc"		=> "https://raw.github.com/thmshly/dotfiles/master/srv/.screenrc",
-	".vimrc" 		=> "https://raw.github.com/thmshly/dotfiles/master/srv/.vimrc",
-	".inputrc" 		=> "https://raw.github.com/thmshly/dotfiles/master/srv/.inputrc"
+	".bashrc" 		=> $dotRepoPath.".bashrc",
+	".screenrc"		=> $dotRepoPath.".screenrc",
+	".vimrc" 		=> $dotRepoPath.".vimrc",
+	".inputrc" 		=> $dotRepoPath.".inputrc"
 );
 
 GetOptions("configure" => \$configure,		# On or off. Configure things. If off, all subsets of configure are ignored

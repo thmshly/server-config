@@ -26,30 +26,6 @@ use strict;
 use Getopt::Long qw(GetOptions Configure);
 Configure("Bundling");
 
-# TODO:
-# 	- fix bundling so that string options cannot start with a - or --
-# 	- allow a default list separator, e.g. item1,item2,item3 here a comma, so that both a comma or a space can be used to form lists
-# 	- nginx config functions
-# 	- git config functions: set name and email
-#!#	- add and parse repos to automatically add to apt sources
-# 	- allow escaping 'updates' in --install and $defaultPkgs. Maybe there's a package called updates??
-# 	- add more comments
-# 	- use POD for documentation
-# 	- create --help output
-# 	- create wrapper for system() to allow simultaneous printing of debug text and running commands. and also automate sudo use if not running as root.
-# 	- case sensitive short options, more possibilities.
-# 	- make $supplement actually work: --install needs a value, and it can take '-', which is undesirable. See first todo. Use die("!FINISH") in anon sub 
-# 	  after checking for "-"?
-# 	- implement --prompt: prompts user before continuing for each 'action'. Or even better: --no-prompt Hardwire this into system() wrapper!
-#!#	- convert all regex to /( |^)$keyword( |$)/
-# 	- strip 'updates' and 'defaults' keywords from packages lists in &apt() at all points of install
-
-# DOING:
-#!#	- Apt sources DONE. Ok,now really done.
-# 	- ssh config: change port number, timeout options?
-#   - FIX BUG: $defaultDir isn't set in decl, nor in &users()..
-#   - Implementing &sys()
-
 my ($configure, 
 	$all,
 	$without,

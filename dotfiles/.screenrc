@@ -1,0 +1,6 @@
+attrcolor b ".I"
+term screen-256color-bce
+caption always "%w"
+hardstatus alwayslastline "%H %D-%d-%M-%y !%u"
+bind f eval "caption splitonly" "hardstatus ignore"
+bind F eval "caption always" "hardstatus alwayslastline"

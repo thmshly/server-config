@@ -31,6 +31,7 @@ my ($configure,
 	$all,
 	$without,
 	$users, 
+	$name,
 	$groups,
 	$shell,
 	$dir,
@@ -51,7 +52,6 @@ my ($configure,
 	$toInstall,
 	);
 
-my $name = ' ';				# To stop 'uninit value' warning
 my $debug = 0;
 my $simulate = 0; 			# If enabled (1), don't run any commands. controlled by option `--simulate|sim!`
 my $prompt = 1;				# If enabled (1), prompt user before continuing with each action
@@ -59,7 +59,7 @@ my $sep = ' '; 				# List separator. Currently used to split option lists
 my $updatesCount = 0;		# To make sure apt-get update/upgrade is only run once. May be set in $defaultPkgs as well as a through --install.
 my $db = "";				# Opening debug variable, used in system calls. Set to "echo '" when $simulate is on.
 my $dbe = "";				# Closing debug variable. Set to "'" when in $simulate.
-my $defaultDir;
+my $defaultDir;				# Set below in $evalDir
 
 # Default packages to install: space separated list. Order respected, except updates, which is ALWAYS DONE FIRST. What if there's a package called updates?
 my $defaultPkgs = "sudo etckeeper links vim vrms updates";
@@ -73,8 +73,15 @@ my $defaultShell = "/bin/bash";
 # Default groups for user: comma separated list. Again, order respected. All will be put through groupadd;
 my $defaultGrps = "sudo,admin,other,testing";
 
-# Default home directory for user. Also set in &users(). This is a BUG. Set it after Getoptions? Doesn't work.
-$defaultDir = "/home/$name";
+# Default home directory for user.
+# This will be eval()ed in &users(), after prompting for user name if !$name. Single quotes essential.
+# You can assign a path directly to $defaultDir by uncommenting the next variable
+my $evalDir = '
+	$defaultDir = "/home/$name";
+';
+
+# Assign a non variable path to $defaultDir here, no need to comment out $evalDir
+#$defaultDir = "/fixed/path/to/homedir";
 
 # String that identifies a keyserver entry in %sources hash. Not really important, so long as it starts with a character that can't be in a package
 # name (or maybe just contain said character?)
@@ -131,7 +138,6 @@ GetOptions("configure" => \$configure,		# On or off. Configure things. If off, a
 #		   "ssh=s" => \$ssh,				# !Not Implemented! SSH. $port number.
 #		   "git" => \$git,					# !Not Implemented! Set username and email for commits
 ) or die("Error in command line arguments $!\n");
-
 
 if($simulate){
 	print "This is a simulation, system commands will be echod as strings to STDOUT.\n";
@@ -298,11 +304,15 @@ sub services {
 }
 
 sub users {
-	if($name eq " "){ # Set to space to stop the warning of uninit value in default decl $defaultDir
+	if(!defined($name)){
 		print "Enter a name for the user: \n";
 		$name = <STDIN>; chomp($name);
-		$defaultDir = "/home/$name";
 	}
+	
+	# eval is used to set the $defaultDir, taken from $name, used below: currently it's /home/$name
+	# Unless, $defaultDir has been previously defined with a non-variable path
+	eval $evalDir unless defined($defaultDir);
+
 	if(!defined($groups)){
 		print "Please enter a list of groups for user '$name' [default: $defaultGrps]: \n";
 		$groups = <STDIN>; chomp($groups);

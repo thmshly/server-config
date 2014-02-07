@@ -24,7 +24,7 @@
 # DOING:
 #!#	- Apt sources DONE. Ok,now really done.
 # 	- ssh config: change port number, timeout options?
-#   - FIX BUG: $defaultDir isn't set in decl, nor in &users()..
+#!# - FIXED>now uses eval in &users(). FIX BUG: $defaultDir isn't set in decl, nor in &users()..
 #   - Implementing &sys()
 #	- Fix regex line 233: merging defaults keyword with other user requested packages
 # 	- Change var $kySrvString to $kySrvIdentStrg

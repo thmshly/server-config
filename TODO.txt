@@ -1,7 +1,7 @@
 # TODO:
 # 	Branches
 # 		- Tidy master to be presentable:
-# 			. Remove todos- this is not feasible
+#!#			. Remove todos- this is not feasible
 # 			. Remove unimplemented features
 #
 # 	- fix bundling so that string options cannot start with a - or --
@@ -26,3 +26,5 @@
 # 	- ssh config: change port number, timeout options?
 #   - FIX BUG: $defaultDir isn't set in decl, nor in &users()..
 #   - Implementing &sys()
+#	- Fix regex line 233: merging defaults keyword with other user requested packages
+# 	- Change var $kySrvString to $kySrvIdentStrg

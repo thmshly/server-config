@@ -26,6 +26,7 @@ use strict;
 use Getopt::Long qw(GetOptions Configure);
 Configure("Bundling");
 
+# These are each on newlines to ease editing..
 my ($configure, 
 	$all,
 	$without,
@@ -110,8 +111,6 @@ my %dotfiles = (
 );
 
 GetOptions("configure" => \$configure,		# On or off. Configure things. If off, all subsets of configure are ignored
-    	   "all" => \$all, 					# !Not Implemented! Configure all: not literally all (only $users $services $permissions and $aptSrc)
-    	   "without" => \$without, 			# !Not Implemented! Without a specific element: will negate something from $all. 
     	   "services|s" => \$services, 		# Disable services. Prompts user to supply or append to a list of services (defaults: $defaultSrvcs).
     	   "users|u" => \$users,			# Create a user. Takes $name, $groups, $shell, $dir, and $custm. None required: prompts for any omitted.
 		   "name|n=s" => \$name,			# Name for user
@@ -119,18 +118,18 @@ GetOptions("configure" => \$configure,		# On or off. Configure things. If off, a
 		   "shell|sh=s" => \$shell,			# User's shell
 		   "dir|d=s" => \$dir,				# User's home directory
 		   "custm|c" => \$custm,			# Prompts for custom arguments to pass to `useradd`. 
-		   "permissions|p" => \$perms,		# !Not Implemented! Change permissions for files like /bin/su, /var/logs/* and /etc/*
-		   #"apt=s" => \$aptSrc,			# String of options to configure apt: s - /etc/sources, uy - update && upgrade
 		   "repos=s" => \$aptSrc,			# List of repositories to add to /etc/apt/sources.list.d/. Keyword: `make_free` -> $unfree
-		   "ssh=s" => \$ssh,				# !Not Implemented! SSH. $port number.
-		   "git" => \$git,					# !Not Implemented! Set username and email for commits
 		   "install=s" => \$packages,		# Installs specified packages, updates and sources with apt-get. Keywords: `defaults` and `updates`
-		   #"packages|pkg=s" => \$packages,	# A string of packages to install. Specifying `defaults` installs packages listed in $defaultPkgs
 		   "supplement=s" => \$splmntPkg,	# Deprecated. A string of packages to install in addition to the defaults $defaultPkgs
 		   "dots|o=s" => \$dots,			# Downloads and places dotfiles in home directory of user specified as string. /root possible.
 		   "debug|bug!" => \$debug,		# Boolean. Prints all system commands to STDOUT and runs them (unless $simulate).
 		   "simulate|sim!" => \$simulate,	# Boolean. Prints all system commands to STDOUT, does not run them.
 		   "prompt!" => \$prompt,			# Boolean. Prompts the user for confirmation before continuing with each action.
+#		   "all" => \$all, 					# !Not Implemented! Configure all: not literally all (only $users $services $permissions and $aptSrc)
+#    	   "without" => \$without, 			# !Not Implemented! Without a specific element: will negate something from $all. 
+#		   "permissions|p" => \$perms,		# !Not Implemented! Change permissions for files like /bin/su, /var/logs/* and /etc/*
+#		   "ssh=s" => \$ssh,				# !Not Implemented! SSH. $port number.
+#		   "git" => \$git,					# !Not Implemented! Set username and email for commits
 ) or die("Error in command line arguments $!\n");
 
 
@@ -141,12 +140,6 @@ if($simulate){
 }
 
 if($configure){
-	if(defined($all)){
-			$services=1;$users=1;$perms=1;$aptSrc=1;
-	}
-	if(defined($without)){
-		&without();						
-	}
 	if($services){
 		print "Configuring services.. "; 
 		&services();
@@ -155,75 +148,88 @@ if($configure){
 		print "Configuring users..\n"; 
 		&users();
 	}
-	if($perms){
-		print "Configuring permissions..\n"; 
-		&permissions();
-	}
 	if($dots){
 		print "Configuring dotfiles..\n"; 
 		&dotfiles();
 	}
-	if($port){
-		print "Configuring ssh..\n"; 
-		&ssh();
-	}
-	if($nginx){
-		print "Configuring nginx..\n"; 
-		&nginx();
-	}
-	if($git){
-		print "Configuring git..\n"; 
-		&git();
-	}
+#	# Not implemented
+#	if(defined($all)){
+#			$services=1;$users=1;$perms=1;$aptSrc=1;
+#	}
+#	# Not implemented
+#	if(defined($without)){
+#		&without();						
+#	}
+#	# Not implemented
+#	if($perms){
+#		print "Configuring permissions..\n"; 
+#		&permissions();
+#	}
+#	# Not implemented
+#	if($port){
+#		print "Configuring ssh..\n"; 
+#		&ssh();
+#	}
+#	# Not implemented
+#	if($nginx){
+#		print "Configuring nginx..\n"; 
+#		&nginx();
+#	}
+#	# Not impemented
+#	if($git){
+#		print "Configuring git..\n"; 
+#		&git();
+#	}
 }
 
-# A wrapper for system() with some extra features!
-sub sys {
-	my ($cmd,$noSudo,$dontPrompt) = @_;
-
-	#! TODO: implement prompting	
-	
-	# If not root, use sudo unless $noSudo
-	if($< && !$noSudo){
-
-		# print out the command whether in debug or simulate
-		print "   sudo $cmd\n" if $debug or $simulate;
-
-		# print debug info if $debug
-		print caller(2),"\n" if $debug;
-
-		# Execute the command only when NOT in simulate
-		system("sudo $cmd") unless $simulate;	
-		
-	# Else just run the commands as current user
-	} else {
-
-		# print out the command whether in debug or simulate
-		print "   $cmd\n" if $debug or $simulate;
-
-		# print debug info if $debug
-		print caller(2),"\n" if $debug;
-
-		# Execute the command only when NOT in simulate
-		system($db."$cmd".$dbe) unless $simulate;	
-	}
-	# Test..
-	&sys("echo 'This should work. String to test. etc, etc.'",1,0);
-
-}
+# A wrapper for system() with some extra features! Not complete. Not in use.
+#sub sys {
+#	my ($cmd,$noSudo,$dontPrompt) = @_;
+#
+#	# TODO: implement prompting	
+#	
+#	# If not root, use sudo unless $noSudo
+#	if($< && !$noSudo){
+#
+#		# print out the command whether in debug or simulate
+#		print "   sudo $cmd\n" if $debug or $simulate;
+#
+#		# print debug info if $debug
+#		print caller(2),"\n" if $debug;
+#
+#		# Execute the command only when NOT in simulate
+#		system("sudo $cmd") unless $simulate;	
+#		
+#	# Else just run the commands as current user
+#	} else {
+#
+#		# print out the command whether in debug or simulate
+#		print "   $cmd\n" if $debug or $simulate;
+#
+#		# print debug info if $debug
+#		print caller(2),"\n" if $debug;
+#
+#		# Execute the command only when NOT in simulate
+#		system($db."$cmd".$dbe) unless $simulate;	
+#	}
+#	# Test..
+#	&sys("echo 'This should work. String to test. etc, etc.'",1,0);
+#
+#}
 
 if(defined($packages)){
 	# Edit sources first if requested
 	&apt("sources") if defined($aptSrc);
 
 	# Keywords `updates` and `defaults`:
+	
 	# Update package list and upgrade system packages. Remove keyword from $packages string if updates were requested
 	&apt("updates") && $packages =~ s/( |^)updates( |$)//g if $packages =~ /( |^)updates( |$)/;
 
 	# Install defaults and remove keyword 'defaults' from $packages string (pointless with this regex..?) if defaults were requested.
 	&apt("defaults") && $packages =~ s/^defaults$// if $packages =~ /^defaults$/; 
 	
-	# Add $defaultPkgs to $toInstall if defaults keyword given. There should be other packages, hence longer regex.
+	# Add $defaultPkgs to $toInstall if defaults keyword given. There must be other packages, hence longer regex.
 	$toInstall = $defaultPkgs if $packages =~ /( )defaults( |$)|( |^)defaults( )/;
 
 	# Make hash out of @backports array in order to type less.
@@ -251,12 +257,12 @@ if(defined($packages)){
 			}			
 			
 			# Add sources to /etc/sources.list.d/$_.list
-			$aptSrc = "$_";
+			# This is safe to set, because any sources specified with --repos (stored in $aptSrc) were processed first
+			$aptSrc = "$_"; 
 			&apt("sources");
-
 		} 
 		
-		# Append package name onto $toInstall
+		# Append package name onto $toInstall. Checking should be unecessary, but it's safer.
 		$toInstall .= " $_" unless $_ eq "defaults"|| $_ eq "updates";
 	}
 	

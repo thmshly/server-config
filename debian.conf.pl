@@ -1,6 +1,26 @@
-#!/usr/bin/perl -w
-# New Debian server configurator script
+#!/usr/bin/perl
+
+# Debian server configurator perl script
+# ------------------------------------
+#
+# Copyright (C) 2014 Tom Seymour <thmshly@remail.pw>
+# 
+# This program is licensed under the MIT License.
+#
+# The full license can be viewed at: 
+# https://github.com/thmshly/server-config/MIT-LICENSE.txt
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+# LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+# OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+# WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+use warnings;
 use strict;
+
 # For some reason this doesn't work as Getopt::Long::Configure(); - Configure can't be found in @INC (at least on the two machines I've tried)
 # Exporting the function as below works.
 use Getopt::Long qw(GetOptions Configure);

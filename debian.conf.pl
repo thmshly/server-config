@@ -73,12 +73,12 @@ my $defaultShell = "/bin/bash";
 # Default groups for user: comma separated list. Again, order respected. All will be put through groupadd;
 my $defaultGrps = "sudo,admin,other,testing";
 
-# Default home directory for user.
-# This will be eval()ed in &users(), after prompting for user name if !$name. Single quotes essential.
-# You can assign a path directly to $defaultDir by uncommenting the next variable
-my $evalDir = '
+my $setDefaultDir = sub {
+
+	# Default home directory for user. In an anonymous sub to interpolate currently unset $name variable after prompt in &users()
 	$defaultDir = "/home/$name";
-';
+
+};
 
 # Assign a non variable path to $defaultDir here, no need to comment out $evalDir
 #$defaultDir = "/fixed/path/to/homedir";
@@ -304,16 +304,15 @@ sub services {
 }
 
 sub users {
+
 	if(!defined($name)){
+		# Prompt for user's name
 		print "Enter a name for the user: \n";
 		$name = <STDIN>; chomp($name);
 	}
-	
-	# eval is used to set the $defaultDir, taken from $name, used below: currently it's /home/$name
-	# Unless, $defaultDir has been previously defined with a non-variable path
-	eval $evalDir unless defined($defaultDir);
 
 	if(!defined($groups)){
+		# Prompt for a comma separated list of groups
 		print "Please enter a list of groups for user '$name' [default: $defaultGrps]: \n";
 		$groups = <STDIN>; chomp($groups);
 		$groups = &parseDefaults($defaultGrps,$groups);
@@ -325,16 +324,23 @@ sub users {
 	&createGroups($groups) if $groups;
 
 	if(!defined($shell)){
+		# Prompt for user's login shell
 		print "Please enter the login shell for user '$name' [default: $defaultShell]: \n";
 		$shell = <STDIN>; chomp($shell);
 		$shell = &parseDefaults($defaultShell,$shell);
 	}
+
 	if(!defined($dir)){
+		# Call anonymous subroutine to set $defaultDir
+		$setDefaultDir->();
+		# Prompt for path to user's home directory
 		print "Please enter a path for the user's home directory [default: $defaultDir]: \n";
 		$dir = <STDIN>; chomp($dir);
 		$dir = &parseDefaults($defaultDir,$dir);
 	}
+
 	if(defined($custm)){
+		# Prompt for custom arguments to useradd
 		print "Enter your custom arguments to pass to `useradd`: \n";
 		$custm = <STDIN>; chomp($custm);
 	}
@@ -343,8 +349,12 @@ sub users {
 	$groups = "-G ".$groups if $groups;
 	$shell = "-s ".$shell if $shell;
 	$dir = "-d ".$dir if $dir;
+
+	# No new line is important!
 	print "User $name will be created with groups '$groups', shell '$shell', in directory '$dir' ";
+	# Print any custom arguments for useradd
 	print "and custom args '$custm'" if $custm; print ".\n";
+
 	# Create the user account
 	system("$db useradd -m $groups $shell $dir $custm $name $dbe");
 	# Set a password for the user

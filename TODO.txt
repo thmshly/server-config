@@ -2,14 +2,14 @@
 # 	Branches
 # 		- Tidy master to be presentable:
 #!#			. Remove todos- this is not feasible
-# 			. Remove unimplemented features
-#
+#!# 		. Comment and group unimplemented features
 # 	- fix bundling so that string options cannot start with a - or --
 # 	- allow a default list separator, e.g. item1,item2,item3 here a comma, so that both a comma or a space can be used to form lists
-# 	- nginx config functions
-# 	- git config functions: set name and email
+# 	- nginx config functions - Probably not going to happen here.
+# 	- git config functions: set name and email? 
+#	- etckeeper init
 #!#	- add and parse repos to automatically add to apt sources
-# 	- allow escaping 'updates' in --install and $defaultPkgs. Maybe there's a package called updates??
+# 	- allow escaping 'updates' in --install and $defaultPkgs. Maybe there's a package called updates?? Or prepend keyword with special charater.
 # 	- add more comments
 # 	- use POD for documentation
 # 	- create --help output
@@ -20,11 +20,15 @@
 # 	- implement --prompt: prompts user before continuing for each 'action'. Or even better: --no-prompt Hardwire this into system() wrapper!
 #!#	- convert all regex to /( |^)$keyword( |$)/
 # 	- strip 'updates' and 'defaults' keywords from packages lists in &apt() at all points of install
+# 	- fix BUG: &parseDefaults() '+ <item>' syntax to append to defaults will not work with comma separated lists, as in $defaultGroups. Hence, global 
+#	  separator value THAT IS USED. It's a matter of style I guess..? For useradd commas are more convenient, but not for apt-get, par example..
+#?  - make_free uninstalls packages identified by vrms: e.g. java
 
 # DOING:
 #!#	- Apt sources DONE. Ok,now really done.
 # 	- ssh config: change port number, timeout options?
-#!# - FIXED>now uses eval in &users(). FIX BUG: $defaultDir isn't set in decl, nor in &users()..
+#!# - FIXED>Refactored as anonymous subroutine. !now uses eval in &users(). FIX BUG: $defaultDir isn't set in decl, nor in &users()..
 #   - Implementing &sys()
-#	- Fix regex line 233: merging defaults keyword with other user requested packages
+#	- Fix regex line 233: merging defaults keyword with other user requested packages. The string must contain more than ' defaults' or 'defaults '
 # 	- Change var $kySrvString to $kySrvIdentStrg
+

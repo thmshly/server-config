@@ -472,7 +472,7 @@ sub apt {
 		print "Installing $pkgs.. \n";
 		# Install packages $pkgs- should not contain 'updates' or 'default' - currently this dies if either is found, but could instead strip them out? 
 		# Later.
-		system($db."apt-get install $pkgs".$dbe) unless $pkgs =~ /( |^)upflates( |$)|( |^)defaults( |$)/ && die("Keyword 'updates' or 'defaults' found in package list at 'apt-get install': review program code! $!");
+		system($db."apt-get install $pkgs".$dbe) unless $pkgs =~ /( |^)updates( |$)|( |^)defaults( |$)/ && die("Keyword 'updates' or 'defaults' found in package list at 'apt-get install': review program code! $!");
 		return 1;
 
 	} elsif($mode eq "keyserver"){

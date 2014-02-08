@@ -35,4 +35,4 @@
 #!#	- DONE: --repos make_free regex required in $unfree for perl 1 liner. However, order of repos (contrib non-free) must match sources.list.. remove each separately?
 #!  - BUG: first download of dotfiles with --conf -o root moves any originals to ".dotfile.orig".epoch(); However, if this is executed a second time
 #	  the dotfiles are saved as ".dotfile.1", etc.  Is this  problem with epoch(), or something else? Only execed the 2nd after logging out.
-
+#!#	- BUG!Fixed: regex added to remove 'updates' keyword in &apt("install"): updates is not removed from --install $defaultPkgs string

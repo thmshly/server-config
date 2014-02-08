@@ -451,9 +451,17 @@ sub apt {
 		system($db."apt-get update".$dbe);
 
 	} elsif($mode eq "defaults"){
-		print "Installing default packages: $defaultPkgs\n";
-		&apt("updates") if $defaultPkgs =~ /( |^)updates( |$)/;
-		system($db."apt-get install $defaultPkgs".$dbe);
+
+		my $pkgs = $defaultPkgs;
+
+		print "Installing default packages: $pkgs\n";
+		
+		# Update system if $defaultPkgs contains 'updates', and remove keyword from $defaultPkgs string
+		&apt("updates") && $pkgs =~ s/updates( |$)//g if $pkgs =~ /( |^)updates( |$)/;
+
+		# Install the remaining packages in $defaultPkgs
+		system($db."apt-get install $pkgs".$dbe);
+
 		return 1;
 		
 	} elsif($mode eq "backports"){

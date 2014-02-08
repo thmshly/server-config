@@ -8,7 +8,7 @@
 # This program is licensed under the MIT License.
 #
 # The full license can be viewed at: 
-# https://github.com/thmshly/server-config/MIT-LICENSE.txt
+# https://raw.github.com/thmshly/server-config/master/MIT-LICENSE.txt
 # 
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF

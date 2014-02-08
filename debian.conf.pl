@@ -65,7 +65,7 @@ my $defaultDir;				# Set below in $evalDir
 my $defaultPkgs = "sudo etckeeper links vim vrms updates";
 
 # Default services to disable: space separated list. Order respected, if it matters.
-my $defaultSrvcs = "sendmail apache2 mysql bind9 cups";
+my $defaultSrvcs = "sendmail apache2 mysql bind9 cups samba";
 
 # Default user shell
 my $defaultShell = "/bin/bash";

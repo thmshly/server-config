@@ -97,7 +97,7 @@ my %sources = (
 	"mariadb".$kySrvString	=> "keyserver.ubuntu.com 0xcbcb082a1bb943db",
 );
 
-# Sources to remove with 'make_free' keyword for --repos
+# Sources to remove with 'make_free' keyword for --repos. Order not important. Space separated
 my $unfree = "non-free contrib"; 
 
 # Packages that require backports. Need to be installed with "apt-get -t wheezy-backports install $package_name", or similar.
@@ -414,8 +414,20 @@ sub apt {
 			# Install python-software-properties
 			print "Installing python-software-properties for use of 'add-apt-repository'..\n";
 			system("$db apt-get install python-software-properties$dbe");
+			
 			# Remove non-free and contrib sources
-			system("$db add-apt-repository --remove $unfree$dbe");
+			#system("$db add-apt-repository --remove $unfree".$dbe);
+			
+			# add-apt-repository --remove doesn't want to work. This is a dirty fix.
+			# Even more so, as it runs potentially more than once.. But this makes order of repos in $unfree unimportant
+			my $srcsList = "/etc/apt/sources.list";
+			foreach(split(" ",$unfree)){
+				system($db."perl -pi.bak -e 's/$_//g' $srcsList".$dbe);
+			}
+
+			print "sources after make_free\n";
+			system($db."cat $srcsList".$dbe);
+			
 			# Remove "make_free" from $aptSrc string
 			$aptSrc =~ s/( |^)make_free( |$)//g;
 		}

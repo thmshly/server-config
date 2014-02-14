@@ -2,6 +2,6 @@ This is a work in progress. An attempt to refresh my perl while creating somethi
 
 **The current progress is undergoing testing. Use is not recommended.**
 
-When it has been tested on a server I will rewrite this README with full usage instructions.
+When it has been fully tested I will rewrite this README with detailed usage instructions.
 
 If at all important, the license is [MIT-LICENSE](MIT-LICENSE.txt).
